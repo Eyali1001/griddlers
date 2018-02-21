@@ -1,0 +1,98 @@
+import random
+import pygame
+"""Move class to different file"""
+class grid(object):
+    def __init__(self,size,option):
+        if option==0:
+            self.body = [[random.choice(['X',' ']) for i in range(size)] for i in range(size)]
+        elif option>=1:
+            self.body = [[" " for i in range(size)] for i in range(size)]
+
+
+    def draw(self):
+        for i in self.body:
+            print "".join(i)
+
+    def line(self,n):
+        return self.body[n]
+
+    def col(self,n):
+        return[line[n] for line in self.body]
+
+    def fill(self,row,col):
+        self.body[row][col] = 'X'
+
+    def erase(self,row,col):
+        self.body[row][col] = ' '
+
+
+def desc_line(line):
+    c = 0
+    res = []
+    for i in line:
+        if i=='X':
+            c+=1
+        elif i==' ' and c!=0:
+            res+=str(c)
+            c=0
+        else:
+            c=0
+    if c!=0:
+        res+=str(c)
+    return res
+
+a = grid(10,0)
+
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+WIDTH = 20
+HEIGHT = 20
+MARGIN = 5
+
+pygame.init()
+size = int(len(a.body)*25.5)
+WINDOW_SIZE = [size+50, size+50]
+screen = pygame.display.set_mode(WINDOW_SIZE)
+
+pygame.display.set_caption("Griddlers maker")
+
+done = False
+
+clock = pygame.time.Clock()
+pygame.font.init()
+
+while not done:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            done = True
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            column = (pos[0]-50) // (WIDTH + MARGIN)
+            row = (pos[1]-50) // (HEIGHT + MARGIN)
+            print("Click ", pos, "Grid coordinates: ", row, column)
+            if event.button == 1:
+                a.fill(row,column)
+            elif event.button ==3:
+                a.erase(row,column)
+
+
+    screen.fill(WHITE)
+
+    for row in range(len(a.body)):
+        for column in range(len(a.body)):
+            color = WHITE
+            if a.body[row][column] == 'X':
+                color = BLACK
+            pygame.draw.rect(screen,
+                             color,
+                             [(MARGIN + WIDTH) * column + MARGIN + 50,
+                              (MARGIN + HEIGHT) * row + MARGIN + 50,
+                              WIDTH,
+                              HEIGHT])
+
+
+    clock.tick(60)
+
+    pygame.display.flip()
+pygame.quit()
+a.draw()
