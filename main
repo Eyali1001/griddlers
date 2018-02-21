@@ -41,7 +41,7 @@ def desc_line(line):
         res+=str(c)
     return res
 
-a = grid(10,0)
+a = grid(5,0)
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -59,7 +59,10 @@ pygame.display.set_caption("Griddlers maker")
 done = False
 
 clock = pygame.time.Clock()
-pygame.font.init()
+
+font = pygame.font.SysFont("comicsansms", 15)
+
+
 
 while not done:
     for event in pygame.event.get():
@@ -76,7 +79,11 @@ while not done:
                 a.erase(row,column)
 
 
+
     screen.fill(WHITE)
+    """add line description in right places"""
+    text = font.render(str(desc_line(a.col(0))), True, (0, 128, 0))
+    screen.blit(text,(50,0))
 
     for row in range(len(a.body)):
         for column in range(len(a.body)):
