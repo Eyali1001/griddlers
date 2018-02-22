@@ -1,8 +1,13 @@
 import random
 import pygame
 """Move class to different file"""
+
+# the grid object, which I use to store griddlers. includes some useful functions for easy use.
 class grid(object):
     def __init__(self,size,option):
+        self.size = size
+
+        # options for creating grid: 0=randomize,1=blank
         if option==0:
             self.body = [[random.choice(['X',' ']) for i in range(size)] for i in range(size)]
         elif option>=1:
@@ -13,7 +18,7 @@ class grid(object):
         for i in self.body:
             print "".join(i)
 
-    def line(self,n):
+    def row(self,n):
         return self.body[n]
 
     def col(self,n):
@@ -25,7 +30,7 @@ class grid(object):
     def erase(self,row,col):
         self.body[row][col] = ' '
 
-
+# the algorithm which describes a line/column, griddler style (distinguishing the "blobs" in aline and counting them)
 def desc_line(line):
     c = 0
     res = []
@@ -35,23 +40,27 @@ def desc_line(line):
         elif i==' ' and c!=0:
             res+=str(c)
             c=0
-        else:
-            c=0
     if c!=0:
         res+=str(c)
     return res
 
+# create grid object to base game window on
 a = grid(5,0)
 
+# Setting some constants for the game window.
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+GREY = (128,128,128)
 WIDTH = 20
 HEIGHT = 20
 MARGIN = 5
+FRAME = 50
 
+# initialize the pygame module.
 pygame.init()
-size = int(len(a.body)*25.5)
-WINDOW_SIZE = [size+50, size+50]
+# set the size of the window according to the size of the grid.
+size = int(a.size*25.5)
+WINDOW_SIZE = [size+FRAME, size+FRAME]
 screen = pygame.display.set_mode(WINDOW_SIZE)
 
 pygame.display.set_caption("Griddlers maker")
@@ -59,7 +68,7 @@ pygame.display.set_caption("Griddlers maker")
 done = False
 
 clock = pygame.time.Clock()
-
+# choose font for hint numbers
 font = pygame.font.SysFont("comicsansms", 15)
 
 
@@ -80,20 +89,23 @@ while not done:
 
 
 
-    screen.fill(WHITE)
+    screen.fill(BLACK)
     """add line description in right places"""
-    text = font.render(str(desc_line(a.col(0))), True, (0, 128, 0))
-    screen.blit(text,(50,0))
 
-    for row in range(len(a.body)):
-        for column in range(len(a.body)):
+
+    for i in range(a.size):
+        text = font.render(" ".join(desc_line(a.row(i))), True,WHITE)
+        screen.blit(text,(0,FRAME+i*(HEIGHT+MARGIN)))
+
+    for row in range(a.size):
+        for column in range(a.size):
             color = WHITE
             if a.body[row][column] == 'X':
-                color = BLACK
+                color = GREY
             pygame.draw.rect(screen,
                              color,
-                             [(MARGIN + WIDTH) * column + MARGIN + 50,
-                              (MARGIN + HEIGHT) * row + MARGIN + 50,
+                             [(MARGIN + WIDTH) * column + MARGIN + FRAME,
+                              (MARGIN + HEIGHT) * row + MARGIN + FRAME,
                               WIDTH,
                               HEIGHT])
 
