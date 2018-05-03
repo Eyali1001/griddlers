@@ -2,6 +2,12 @@ import pygame
 from Grid import *
 """Move class to different file"""
 
+def play_grid(name):
+    g = grid()
+    #loading grid from storage
+    g.load(name)
+    s = create_grid("temp",g.size)
+    print compare(g,s)
 
 #lets the user create a grid (with gui using pygame) and return it. n is the size (n*n) of the grid, name is name.
 def create_grid(name,n):
@@ -82,6 +88,7 @@ def create_grid(name,n):
 
         pygame.display.flip()
     pygame.quit()
-    g.save()
     return g
 
+
+play_grid("adam")

@@ -1,7 +1,7 @@
 import random
 # the grid object, which I use to store griddlers. includes some useful functions for easy use.
 class grid(object):
-    def __init__(self,name,size,option):
+    def __init__(self,name="emptygrid",size=5,option=1):
         self.size = size
         self.name = name
         # options for creating grid: 0=randomize,1=blank
@@ -9,6 +9,7 @@ class grid(object):
             self.body = [[random.choice(['X',' ']) for i in range(size)] for i in range(size)]
         elif option>=1:
             self.body = [[" " for i in range(size)] for i in range(size)]
+
 
 
     def draw(self):
@@ -44,6 +45,7 @@ class grid(object):
                 self.body=eval(content[i+1].strip())
                 self.size=len(self.body)
                 return
+        print "didn't find grid"
 # the algorithm which describes a line/column, griddler style (distinguishing the "blobs" in aline and counting them)
 def desc_line(line):
     c = 0
@@ -57,3 +59,13 @@ def desc_line(line):
     if c!=0:
         res+=str(c)
     return res
+
+def compare(g1,g2):
+    assert g1.size == g2.size
+    b1 = g1.body
+    b2= g2.body
+    for i,j in zip(b1,b2):
+        for x,y in zip(i,j):
+            if x!=y:
+                return False
+    return True
