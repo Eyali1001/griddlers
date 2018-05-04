@@ -6,11 +6,11 @@ def play_grid(name):
     g = grid()
     #loading grid from storage
     g.load(name)
-    s = create_grid("temp",g.size)
-    print compare(g,s)
+    s = create_grid("temp",g.size,goal=g)
+    print g.body==s.body
 
 #lets the user create a grid (with gui using pygame) and return it. n is the size (n*n) of the grid, name is name.
-def create_grid(name,n):
+def create_grid(name,n,goal = None):
     # create grid object to base game window on
     g = grid(name,n, 1)
 
@@ -38,6 +38,8 @@ def create_grid(name,n):
     # choose font for hint numbers
     font = pygame.font.SysFont("arial", 15)
 
+    #set the describing line according to the goal parameter
+    gd = g if goal is None else goal
 
 
     while not done:
@@ -60,11 +62,12 @@ def create_grid(name,n):
         """add line description in right places"""
 
         # render and paint the horizontal and vertical text hints
+
         for i in range(g.size):
-            line = desc_line(g.row(i))
+            line = desc_line(gd.row(i))
             text = font.render("  ".join(line), True,WHITE)
             screen.blit(text,(FRAME-len(line)*12,FRAME+i*(HEIGHT+MARGIN)+7))
-            line = desc_line(g.col(i))
+            line = desc_line(gd.col(i))
             # no easy way to blit text with multiple lines in pygame, so i have to do it one num at a time
             for j in range(len(line)):
                 text = font.render(line[j], True, WHITE)
