@@ -10,7 +10,8 @@ class grid(object):
         elif option>=1:
             self.body = [[" " for i in range(size)] for i in range(size)]
 
-
+    def __getitem__(self, i):
+        return self.body[i]
 
     def draw(self):
         for i in self.body:

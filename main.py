@@ -76,9 +76,7 @@ def create_grid(name,n,goal = None):
         #paint grid
         for row in range(g.size):
             for column in range(g.size):
-                color = WHITE
-                if g.body[row][column] == 'X':
-                    color = GREY
+                color = GREY if g[row][column]=='X' else WHITE
                 pygame.draw.rect(screen,
                                  color,
                                  [(MARGIN + WIDTH) * column + MARGIN + FRAME,
@@ -94,4 +92,4 @@ def create_grid(name,n,goal = None):
     return g
 
 
-play_grid("adam")
+play_grid("first")
