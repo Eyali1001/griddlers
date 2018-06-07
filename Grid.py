@@ -6,16 +6,21 @@ class grid(object):
         self.name = name
         # options for creating grid: 0=randomize,1=blank
         if option==0:
-            self.body = [[random.choice(['X',' ']) for i in range(size)] for i in range(size)]
+            self.body = [[random.choice([False,True]) for i in range(size)] for i in range(size)]
         elif option>=1:
-            self.body = [[" " for i in range(size)] for i in range(size)]
+            self.body = [[False for i in range(size)] for i in range(size)]
 
     def __getitem__(self, i):
         return self.body[i]
 
-    def draw(self):
+    def __setitem__(self, key, value):
+        self.body[key]=value
+
+    def __str__(self):
+        st = ""
         for i in self.body:
-            print "".join(i)
+             st+="".join([[' ','X'][x] for x in i])+'\n'
+        return st
 
     def row(self,n):
         return self.body[n]
@@ -24,10 +29,10 @@ class grid(object):
         return[line[n] for line in self.body]
 
     def fill(self,row,col):
-        self.body[row][col] = 'X'
+        self.body[row][col] = True
 
     def erase(self,row,col):
-        self.body[row][col] = ' '
+        self.body[row][col] = False
 
     def save(self):
         with open("grid_storage",'r+') as f:
@@ -47,18 +52,20 @@ class grid(object):
                 self.size=len(self.body)
                 return
         print "didn't find grid"
+
+
 # the algorithm which describes a line/column, griddler style (distinguishing the "blobs" in aline and counting them)
 def desc_line(line):
     c = 0
     res = []
     for i in line:
-        if i=='X':
+        if i:
             c+=1
-        elif i==' ' and c!=0:
-            res+=str(c)
+        elif not i and c:
+            res.append(c)
             c=0
-    if c!=0:
-        res+=str(c)
+    if c:
+        res.append(c)
     return res
 
 def compare(g1,g2):
