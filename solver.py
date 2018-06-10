@@ -20,10 +20,9 @@ def permutations(desc, n):
 
 
 # recives a possibility(grid) and tests it
-def test_grid(pos):
-    lines = pos[:len(pos) / 2]
-    cols = pos[len(pos) / 2:]
-    g = grid('tester', len(pos) / 2)
+def test_grid(lines,cols):
+
+    g = grid('tester', len(lines))
     for i in range(len(lines)):
         g[i] = lines[i]
     for i in range(len(cols)):
@@ -32,15 +31,12 @@ def test_grid(pos):
     return (True, g)
 
 
-# inital try: before dynamic shortening, try to bruteforce the grid by trying all permutations
-def bf(lines):
-    a = filterperms(lines)[:len(lines)/2]
-    print a
-    ops = product(*filterperms(lines)[:len(lines)/2])
-
+# recieves a list of len 2 which holds the info about the grid. d[0] lines, d[1] columns
+def bf(d):
+    a = filterperms(d)
+    ops = product(*a)
     for i in ops:
-
-        (status, grid) = test_grid(list(i)+lines[len(lines)/2:])
+        (status, grid) = test_grid(i,d[1])
         if status:
             return grid
     return "unsuccesful"
@@ -65,13 +61,14 @@ def findcommon(ls):
     return ret
 
 #CLEAN UP!
-def filterperms(lines):
-    size = len(lines)/2
+def filterperms(d):
+    size = len(d[0])
+    lines = d[0]+d[1]
     perms = [permutations(l,size) for l in lines]
 
 
     for i,l in enumerate(lines):
-        #filtering by full or blank lines
+        # filtering by full or blank lines
         if l==[] or l == [size]:
 
             if i>=size:
@@ -89,8 +86,10 @@ def filterperms(lines):
                 for p in spots:
                     perms[p+size] = filter(lambda ls: ls[i], perms[p+size])
     #print (sum([len(perms[i]) for i in range(len(perms))]))
-    return perms
+    return perms[:size]
+
 a = grid("bla", 10, 0)
 print a
 print("\n")
+
 print bf(a.tolist())

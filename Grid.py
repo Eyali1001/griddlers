@@ -59,7 +59,7 @@ class grid(object):
 
     #return a list of the describing lines of a grid, for testing the solver module
     def tolist(self):
-        return [desc_line(i) for i in self]+[desc_line(self.col(i)) for i in range(self.size)]
+        return ([desc_line(i) for i in self],[desc_line(self.col(i)) for i in range(self.size)])
 
 
 # the algorithm which describes a line/column, griddler style (distinguishing the "blobs" in aline and counting them)
