@@ -28,12 +28,15 @@ class grid(object):
     def col(self,n):
         return[line[n] for line in self.body]
 
+    #fill a spot
     def fill(self,row,col):
         self.body[row][col] = True
 
+    #erase a spot
     def erase(self,row,col):
         self.body[row][col] = False
 
+    #save a grid to grid_storage
     def save(self):
         with open("grid_storage",'r+') as f:
             cont = f.readlines()
@@ -42,6 +45,7 @@ class grid(object):
                 return
             f.write(self.name+'\n'+str(self.body)+'\n')
 
+    #load a grid from storage into self by name
     def load(self,name):
         self.name = name
         with open("grid_storage") as f:
@@ -52,6 +56,10 @@ class grid(object):
                 self.size=len(self.body)
                 return
         print "didn't find grid"
+
+    #return a list of the describing lines of a grid, for testing the solver module
+    def tolist(self):
+        return [desc_line(i) for i in self]+[desc_line(self.col(i)) for i in range(self.size)]
 
 
 # the algorithm which describes a line/column, griddler style (distinguishing the "blobs" in aline and counting them)
@@ -77,3 +85,4 @@ def compare(g1,g2):
             if x!=y:
                 return False
     return True
+
