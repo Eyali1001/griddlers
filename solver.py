@@ -31,10 +31,10 @@ def test_grid(lines,cols):
     return (True, g)
 
 
-# recieves a list of len 2 which holds the info about the grid. d[0] lines, d[1] columns
+
 def bf(d):
-    a = filterperms(d)
-    ops = product(*a)
+    ops = product(*d[0])
+
     for i in ops:
         (status, grid) = test_grid(i,d[1])
         if status:
@@ -85,11 +85,34 @@ def filterperms(d):
             else:
                 for p in spots:
                     perms[p+size] = filter(lambda ls: ls[i], perms[p+size])
-    #print (sum([len(perms[i]) for i in range(len(perms))]))
-    return perms[:size]
 
-a = grid("bla", 10, 0)
+    return perms[:size],perms[size:]
+
+
+def suitable(level,lines,line,cols):
+    for i in range(len(line)):
+        possiblecols = filter(lambda c: c[0]==line[i],cols[i])
+        commoncount =  [c[level] for c in possiblecols].count(True)
+        if commoncount==0 or commoncount==len(possiblecols):
+            lines = filter(lambda l: l[i]==bool(commoncount),lines)
+    return lines
+
+
+def griddlersproduct(d):
+    column_disc = d[1]
+    lines,cols = filterperms(d)
+    for line in lines[0]:
+        ls = [[line]]
+        for i in range(1,len(line)):
+            ls.append(suitable(i,lines[i],line,cols))
+        stat  = bf((ls,column_disc))
+        if(stat!="unsuccesful"):
+            return stat
+
+
+
+a = grid("bla", 15, 0)
 print a
 print("\n")
 
-print bf(a.tolist())
+print griddlersproduct(a.tolist())
